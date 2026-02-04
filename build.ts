@@ -23,14 +23,29 @@ if (existsSync(TYPES_TMP)) {
 
 console.log("Building CommonX...");
 
-// Build with Bun
+// Build browser-safe modules (logger, id, main index)
+// These don't use Node.js APIs and can run in browsers
+console.log("  Building browser-safe modules...");
 await Bun.build({
   entrypoints: [
     join(SRC, "index.ts"),
-    join(SRC, "sqlite/index.ts"),
     join(SRC, "logger/index.ts"),
-    join(SRC, "path/index.ts"),
     join(SRC, "id/index.ts"),
+  ],
+  outdir: DIST,
+  target: "browser",
+  format: "esm",
+  splitting: false,
+  sourcemap: "linked",
+});
+
+// Build node-only modules (sqlite, path)
+// These require Node.js APIs (node:fs, node:path, node:sqlite, etc.)
+console.log("  Building node-only modules...");
+await Bun.build({
+  entrypoints: [
+    join(SRC, "sqlite/index.ts"),
+    join(SRC, "path/index.ts"),
   ],
   outdir: DIST,
   target: "node",
