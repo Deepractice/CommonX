@@ -1,6 +1,6 @@
 {
   "name": "commonxjs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Infrastructure utilities library for Bun and Node.js",
   "type": "module",
   "main": "./dist/index.js",
