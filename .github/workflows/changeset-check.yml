@@ -24,18 +24,19 @@ jobs:
           CHANGESET_FILES=$(echo "$CHANGED_FILES" | grep '^\.changeset/.*\.md$' | grep -v 'README\.md' || true)
 
           if [ -z "$CHANGESET_FILES" ]; then
-            echo "❌ No changeset found in this PR."
+            echo "No changeset found in this PR."
             echo ""
             echo "Please add a changeset by running:"
             echo "  bunx changeset"
             echo ""
             echo "Or manually create a file in .changeset/ with the format:"
             echo "---"
-            echo "\"commonxjs\": patch|minor|major"
+            echo "\"@commonxjs/sqlite\": patch|minor|major"
+            echo "\"@commonxjs/logger\": patch|minor|major"
             echo "---"
             echo ""
             echo "Description of changes"
             exit 1
           fi
 
-          echo "✅ Changeset found: $CHANGESET_FILES"
+          echo "Changeset found: $CHANGESET_FILES"

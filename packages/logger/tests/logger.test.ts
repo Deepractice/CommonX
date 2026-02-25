@@ -1,5 +1,5 @@
-import { describe, test, expect, beforeEach, spyOn } from "bun:test";
-import { createLogger, setLoggerFactory, type LoggerFactory, type Logger } from "../src/logger";
+import { describe, test, expect } from "bun:test";
+import { createLogger, setLoggerFactory, type LoggerFactory, type Logger } from "../src";
 
 describe("logger", () => {
   describe("createLogger", () => {

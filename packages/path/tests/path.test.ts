@@ -7,7 +7,7 @@ import {
   getMonorepoRoot,
   resolveFromRoot,
   resolveFromPackage,
-} from "../src/path";
+} from "../src";
 
 describe("path utilities", () => {
   describe("getModuleDir", () => {
@@ -15,7 +15,7 @@ describe("path utilities", () => {
       const dir = getModuleDir(import.meta);
 
       expect(dir).toBeString();
-      expect(dir).toEndWith("/CommonX/tests");
+      expect(dir).toEndWith("/path/tests");
     });
 
     test("returns absolute path", () => {
@@ -30,7 +30,7 @@ describe("path utilities", () => {
       const root = getPackageRoot(import.meta);
 
       expect(root).toBeString();
-      expect(root).toEndWith("/CommonX");
+      expect(root).toEndWith("/path");
     });
 
     test("package root contains package.json", () => {
@@ -45,7 +45,6 @@ describe("path utilities", () => {
       const root = getMonorepoRoot(import.meta);
 
       expect(root).toBeString();
-      // For single repo, monorepo root equals package root
       expect(root).toEndWith("/CommonX");
     });
 
@@ -62,21 +61,15 @@ describe("path utilities", () => {
 
   describe("resolveFromRoot", () => {
     test("resolves path relative to root", () => {
-      const path = resolveFromRoot(import.meta, "src");
+      const path = resolveFromRoot(import.meta, "packages");
 
-      expect(path).toEndWith("/CommonX/src");
-    });
-
-    test("handles single path segment", () => {
-      const path = resolveFromRoot(import.meta, "dist");
-
-      expect(path).toEndWith("/CommonX/dist");
+      expect(path).toEndWith("/CommonX/packages");
     });
 
     test("handles nested path segments", () => {
-      const path = resolveFromRoot(import.meta, "src", "sqlite", "index.ts");
+      const path = resolveFromRoot(import.meta, "packages", "sqlite", "src");
 
-      expect(path).toEndWith("/CommonX/src/sqlite/index.ts");
+      expect(path).toEndWith("/CommonX/packages/sqlite/src");
     });
   });
 
@@ -84,19 +77,13 @@ describe("path utilities", () => {
     test("resolves path relative to package root", () => {
       const path = resolveFromPackage(import.meta, "src");
 
-      expect(path).toEndWith("/CommonX/src");
+      expect(path).toEndWith("/path/src");
     });
 
     test("handles nested path segments", () => {
-      const path = resolveFromPackage(import.meta, "src", "logger", "index.ts");
+      const path = resolveFromPackage(import.meta, "src", "path.ts");
 
-      expect(path).toEndWith("/CommonX/src/logger/index.ts");
-    });
-
-    test("handles tests directory", () => {
-      const path = resolveFromPackage(import.meta, "tests");
-
-      expect(path).toEndWith("/CommonX/tests");
+      expect(path).toEndWith("/path/src/path.ts");
     });
   });
 });

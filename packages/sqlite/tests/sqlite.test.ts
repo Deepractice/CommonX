@@ -1,5 +1,5 @@
 import { describe, test, expect, afterEach } from "bun:test";
-import { openDatabase, type Database } from "../src/sqlite";
+import { openDatabase, type Database } from "../src";
 
 describe("sqlite", () => {
   let db: Database;

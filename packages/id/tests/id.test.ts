@@ -1,12 +1,12 @@
 import { describe, test, expect } from "bun:test";
-import { generateId, generateRequestId } from "../src/id";
+import { generateId, generateRequestId } from "../src";
 
 describe("id utilities", () => {
   describe("generateId", () => {
     test("generates unique IDs", () => {
-      const id1 = generateId();
-      const id2 = generateId();
-      const id3 = generateId();
+      const id1 = generateId("test");
+      const id2 = generateId("test");
+      const id3 = generateId("test");
 
       expect(id1).not.toBe(id2);
       expect(id2).not.toBe(id3);
@@ -14,7 +14,7 @@ describe("id utilities", () => {
     });
 
     test("generates string IDs", () => {
-      const id = generateId();
+      const id = generateId("test");
 
       expect(id).toBeString();
       expect(id.length).toBeGreaterThan(0);
@@ -25,7 +25,7 @@ describe("id utilities", () => {
       const count = 1000;
 
       for (let i = 0; i < count; i++) {
-        ids.add(generateId());
+        ids.add(generateId("test"));
       }
 
       expect(ids.size).toBe(count);
@@ -50,7 +50,6 @@ describe("id utilities", () => {
     test("generates IDs with expected format", () => {
       const id = generateRequestId();
 
-      // Request IDs should have some structure (typically includes prefix or timestamp)
       expect(id).toBeString();
     });
   });

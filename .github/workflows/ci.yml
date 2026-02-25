@@ -8,6 +8,9 @@ on:
     branches:
       - main
 
+env:
+  TURBO_CACHE_DIR: .turbo
+
 jobs:
   typecheck:
     name: Type Check
@@ -20,6 +23,15 @@ jobs:
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
+
+      - name: Cache Turbo
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: turbo-typecheck-${{ runner.os }}-${{ hashFiles('**/bun.lock') }}-${{ github.sha }}
+          restore-keys: |
+            turbo-typecheck-${{ runner.os }}-${{ hashFiles('**/bun.lock') }}-
+            turbo-typecheck-${{ runner.os }}-
 
       - name: Install Dependencies
         run: bun install --frozen-lockfile
@@ -39,20 +51,31 @@ jobs:
         with:
           bun-version: latest
 
+      - name: Cache Turbo
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: turbo-build-${{ runner.os }}-${{ hashFiles('**/bun.lock') }}-${{ github.sha }}
+          restore-keys: |
+            turbo-build-${{ runner.os }}-${{ hashFiles('**/bun.lock') }}-
+            turbo-build-${{ runner.os }}-
+
       - name: Install Dependencies
         run: bun install --frozen-lockfile
 
-      - name: Build
+      - name: Build All Packages
         run: bun run build
 
       - name: Check Build Artifacts
         run: |
-          if [ -d "dist" ]; then
-            echo "✅ Build successful"
-          else
-            echo "❌ Build failed - no dist directory"
-            exit 1
-          fi
+          for pkg in sqlite logger path id; do
+            if [ -d "packages/$pkg/dist" ]; then
+              echo "packages/$pkg built successfully"
+            else
+              echo "packages/$pkg build failed - no dist directory"
+              exit 1
+            fi
+          done
 
   test:
     name: Test
@@ -66,8 +89,20 @@ jobs:
         with:
           bun-version: latest
 
+      - name: Cache Turbo
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: turbo-test-${{ runner.os }}-${{ hashFiles('**/bun.lock') }}-${{ github.sha }}
+          restore-keys: |
+            turbo-test-${{ runner.os }}-${{ hashFiles('**/bun.lock') }}-
+            turbo-test-${{ runner.os }}-
+
       - name: Install Dependencies
         run: bun install --frozen-lockfile
 
+      - name: Build Packages
+        run: bun run build
+
       - name: Run Tests
-        run: bun test
+        run: bun run test
