@@ -24,6 +24,8 @@ export interface Statement {
   get(...params: unknown[]): unknown;
   /** Get all rows */
   all(...params: unknown[]): unknown[];
+  /** Get all rows as arrays of column values */
+  values(...params: unknown[]): unknown[][];
 }
 
 /**

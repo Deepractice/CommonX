@@ -81,6 +81,20 @@ describe("sqlite", () => {
       expect(row == null).toBe(true);
     });
 
+    test("values returns rows as arrays", () => {
+      db = openDatabase(":memory:");
+      db.exec("CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT)");
+      db.prepare("INSERT INTO users (name) VALUES (?)").run("Alice");
+      db.prepare("INSERT INTO users (name) VALUES (?)").run("Bob");
+
+      const stmt = db.prepare("SELECT * FROM users ORDER BY id");
+      const rows = stmt.values();
+
+      expect(rows).toHaveLength(2);
+      expect(rows[0]).toEqual([1, "Alice"]);
+      expect(rows[1]).toEqual([2, "Bob"]);
+    });
+
     test("returns empty array for no matching rows", () => {
       db = openDatabase(":memory:");
       db.exec("CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT)");

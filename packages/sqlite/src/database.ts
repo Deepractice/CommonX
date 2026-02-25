@@ -111,6 +111,9 @@ function openBunDatabase(path: string): Database {
         all(...params: unknown[]): unknown[] {
           return stmt.all(...params);
         },
+        values(...params: unknown[]): unknown[][] {
+          return stmt.values(...params);
+        },
       };
     },
 
@@ -148,6 +151,10 @@ function openNodeDatabase(path: string): Database {
         },
         all(...params: unknown[]): unknown[] {
           return stmt.all(...params);
+        },
+        values(...params: unknown[]): unknown[][] {
+          const rows = stmt.all(...params) as Record<string, unknown>[];
+          return rows.map((row) => Object.values(row));
         },
       };
     },
